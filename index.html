@@ -251,8 +251,8 @@ function processInsights() {
       // Played game at least twice today in separate sessions, averaging under 20 mins per play
       if (stats.count >= 2 && (stats.totalMinutes / stats.count) <= 20 && match) {
         banner.className = "insightBanner warning";
-        bTitle.innerText = "Getting bored?";
-        bDesc.innerHTML = `Repeated boredom loops in <strong>${match.name}</strong>. Take a quick break!`;
+        bTitle.innerText = "Getting bored";
+        bDesc.innerHTML = `in <strong>${match.name}</strong>. Take a quick break!`;
         banner.style.display = "flex";
         return; // Prioritize warnings first
       }
@@ -276,7 +276,7 @@ function processInsights() {
     if ((streak >= 3 || totalMins >= 480) && match) {
       banner.className = "insightBanner hype";
       bTitle.innerText = "In a phase";
-      bDesc.innerHTML = `on <strong>${match.name}</strong>with ${Math.floor(totalMins / 60)}h played with a <strong>${streak} day</strong> streak!`;
+      bDesc.innerHTML = `on <strong>${match.name}</strong> with ${Math.floor(totalMins / 60)}h played with a <strong>${streak} day</strong> streak!`;
       banner.style.display = "flex";
       return;
     }
