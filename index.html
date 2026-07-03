@@ -276,7 +276,7 @@ function processInsights() {
       banner.className = "insightBanner hype";
       bIcon.innerText = "🔥";
       bTitle.innerText = "In a phase?";
-      bDesc.innerHTML = `You show signs of interest in the game <strong>${match.name}</strong> . This week alone you've played for ${Math.floor(totalMins / 60)} hours and a general streak of <strong>${streak} days</strong>!`;
+      bDesc.innerHTML = `You show signs of interest in the game <strong>${match.name}</strong> . This week alone you've played for ${Math.floor(totalMins / 60)} hours with general streak of <strong>${streak} days</strong>!`;
       banner.style.display = "flex";
       return;
     }
