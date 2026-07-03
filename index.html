@@ -76,6 +76,12 @@ body{
   background: rgba(139, 92, 246, 0.05);
 }
 
+/* Neutral state when no patterns are found */
+.insightBanner.normal {
+  border-color: #000000;
+  background: rgba(255, 255, 255, 0.02);
+}
+
 .insightContent {
   flex: 1;
   display: flex;
@@ -93,12 +99,16 @@ body{
 
 .insightBanner.warning .insightTitle { color: #f59e0b; }
 .insightBanner.hype .insightTitle { color: #a78bfa; }
+.insightBanner.normal .insightTitle { color: #888; } /* Muted title for neutral pattern state */
 
 .insightDesc {
   font-size: 11px;
   color: #ccc;
-  overflow: hidden;
-  text-overflow: ellipsis; 
+  white-space: nowrap;
+}
+
+.insightDesc strong {
+  color: #ffffff;
 }
 
 </style>
@@ -109,7 +119,7 @@ body{
 <div class="page">
 
   <div class="insightBanner" id="insightBanner" style="display: none;">
-    <div class="insightContent">
+    <div class="insightContent" id="insightContent">
       <div class="insightTitle" id="insightTitle"></div>
       <div class="insightDesc" id="insightDesc"></div>
     </div>
@@ -200,11 +210,42 @@ function calculateStreaks() {
   return streaks;
 }
 
+/* 🔄 AUTO FONT-SIZE CALCULATOR ENGINE */
+function adjustFontSize() {
+  const container = document.getElementById("insightBanner");
+  const content = document.getElementById("insightContent");
+  const title = document.getElementById("insightTitle");
+  const desc = document.getElementById("insightDesc");
+
+  // Reset to default sizes before calculation loop
+  title.style.fontSize = "11.5px";
+  desc.style.fontSize = "11px";
+
+  // Available width inside banner minus padding bounds (10px left + 10px right)
+  const maxAvailableWidth = container.clientWidth - 20; 
+  
+  let currentTitleSize = 11.5;
+  let currentDescSize = 11;
+
+  // Scale fonts down smoothly until width boundaries fit exactly
+  while (content.scrollWidth > maxAvailableWidth && currentDescSize > 7) {
+    currentTitleSize -= 0.25;
+    currentDescSize -= 0.25;
+    title.style.fontSize = currentTitleSize + "px";
+    desc.style.fontSize = currentDescSize + "px";
+  }
+}
+
 /* WEEK/DAY ANALYSIS BANNER LOGIC */
 function processInsights() {
   const banner = document.getElementById("insightBanner");
   const bTitle = document.getElementById("insightTitle");
   const bDesc = document.getElementById("insightDesc");
+
+  if (!games || games.length === 0) {
+    banner.style.display = "none";
+    return;
+  }
 
   const toLocalISO = (dateObj) => {
     const offset = dateObj.getTimezoneOffset();
@@ -254,6 +295,7 @@ function processInsights() {
         bTitle.innerText = "Getting bored";
         bDesc.innerHTML = `in <strong>${match.name}</strong>. Take a quick break!`;
         banner.style.display = "flex";
+        adjustFontSize();
         return; // Prioritize warnings first
       }
     }
@@ -278,12 +320,17 @@ function processInsights() {
       bTitle.innerText = "In a phase";
       bDesc.innerHTML = `on <strong>${match.name}</strong> with ${Math.floor(totalMins / 60)}h played with a <strong>${streak} day</strong> streak!`;
       banner.style.display = "flex";
+      adjustFontSize();
       return;
     }
   }
 
-  // Default state: Hide banner if there are no strong active warnings or hypes
-  banner.style.display = "none";
+  // Default state: Displays cleanly when no unusual gameplay habits are caught
+  banner.className = "insightBanner normal";
+  bTitle.innerText = "Good job!";
+  bDesc.innerHTML = "No unusual patterns detected today.";
+  banner.style.display = "flex";
+  adjustFontSize();
 }
 
 loadGames();
