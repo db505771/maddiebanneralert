@@ -275,8 +275,8 @@ function processInsights() {
 
     if ((streak >= 3 || totalMins >= 480) && match) {
       banner.className = "insightBanner hype";
-      bTitle.innerText = "In a phase?";
-      bDesc.innerHTML = `Hooked on <strong>${match.name}</strong>: ${Math.floor(totalMins / 60)}h logged over a <strong>${streak} day</strong> streak!`;
+      bTitle.innerText = "In a phase";
+      bDesc.innerHTML = `on <strong>${match.name}</strong>with ${Math.floor(totalMins / 60)}h played with a <strong>${streak} day</strong> streak!`;
       banner.style.display = "flex";
       return;
     }
