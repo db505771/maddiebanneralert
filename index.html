@@ -33,11 +33,12 @@ body{
 /* PAGE */
 
 .page{
-  padding:8px;
+  padding:0;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   height: 100%;
 }
 
@@ -46,19 +47,22 @@ body{
 .insightBanner {
   background: #111;
   border: 1px solid #222;
-  border-radius: 8px;
-  padding: 8px 10px; /* Reduced padding for maximum compactness */
+  border-radius: 6px;
+  padding: 4px 8px; 
   display: flex;
-  align-items: flex-start;
-  gap: 8px;
+  align-items: center; /* Centered vertically to fit the 41px height */
+  gap: 6px;
   transition: all 0.3s ease;
   animation: slideIn 0.4s ease-out;
-  max-width: 280px; /* Slimmed down width */
-  margin: 0 auto;
+  
+  /* Exact dimensions requested */
+  width: 398px;
+  height: 41px;
+  box-sizing: border-box;
 }
 
 @keyframes slideIn {
-  from { opacity: 0; transform: translateY(-8px); }
+  from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -74,28 +78,33 @@ body{
 }
 
 .insightIcon {
-  font-size: 15px; /* Slightly smaller icon to match the narrow profile */
+  font-size: 14px;
   line-height: 1;
-  margin-top: 1px;
 }
 
 .insightContent {
   flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Puts title and description on the same line if they fit */
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .insightTitle {
-  font-size: 12px; /* Slightly smaller title */
+  font-size: 11px;
   font-weight: bold;
-  margin-bottom: 2px;
+  flex-shrink: 0;
 }
 
 .insightBanner.warning .insightTitle { color: #f59e0b; }
 .insightBanner.hype .insightTitle { color: #a78bfa; }
 
 .insightDesc {
-  font-size: 11px; /* Slightly smaller description font */
+  font-size: 10.5px;
   color: #ccc;
-  line-height: 1.25;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Prevents text overflow in tight spacing */
 }
 
 </style>
@@ -252,7 +261,7 @@ function processInsights() {
         banner.className = "insightBanner warning";
         bIcon.innerText = "🔄";
         bTitle.innerText = "Getting bored?";
-        bDesc.innerHTML = `You've repeatedly showed signs of boredom and major interest in <strong>${match.name}</strong> . Consider taking a day/week break to avoid getting bored!`;
+        bDesc.innerHTML = `Repeated boredom loops in <strong>${match.name}</strong>. Take a quick break!`;
         banner.style.display = "flex";
         return; // Prioritize warnings first
       }
@@ -277,7 +286,7 @@ function processInsights() {
       banner.className = "insightBanner hype";
       bIcon.innerText = "🔥";
       bTitle.innerText = "In a phase?";
-      bDesc.innerHTML = `You show signs of interest in the game <strong>${match.name}</strong> . This week alone you've played for ${Math.floor(totalMins / 60)} hours with a general streak of <strong>${streak} days</strong>!`;
+      bDesc.innerHTML = `Hooked on <strong>${match.name}</strong>: ${Math.floor(totalMins / 60)}h logged over a <strong>${streak} day</strong> streak!`;
       banner.style.display = "flex";
       return;
     }
