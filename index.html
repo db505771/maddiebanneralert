@@ -48,14 +48,13 @@ body{
   background: #111;
   border: 1px solid #222;
   border-radius: 6px;
-  padding: 4px 8px; 
+  padding: 4px 10px; 
   display: flex;
-  align-items: center; /* Centered vertically to fit the 41px height */
-  gap: 6px;
+  align-items: center; 
   transition: all 0.3s ease;
   animation: slideIn 0.4s ease-out;
   
-  /* Exact dimensions requested */
+  /* Exact dimensions */
   width: 398px;
   height: 41px;
   box-sizing: border-box;
@@ -77,22 +76,17 @@ body{
   background: rgba(139, 92, 246, 0.05);
 }
 
-.insightIcon {
-  font-size: 14px;
-  line-height: 1;
-}
-
 .insightContent {
   flex: 1;
   display: flex;
   align-items: center;
-  gap: 6px; /* Puts title and description on the same line if they fit */
+  gap: 8px; 
   overflow: hidden;
   white-space: nowrap;
 }
 
 .insightTitle {
-  font-size: 11px;
+  font-size: 11.5px;
   font-weight: bold;
   flex-shrink: 0;
 }
@@ -101,10 +95,10 @@ body{
 .insightBanner.hype .insightTitle { color: #a78bfa; }
 
 .insightDesc {
-  font-size: 10.5px;
+  font-size: 11px;
   color: #ccc;
   overflow: hidden;
-  text-overflow: ellipsis; /* Prevents text overflow in tight spacing */
+  text-overflow: ellipsis; 
 }
 
 </style>
@@ -115,7 +109,6 @@ body{
 <div class="page">
 
   <div class="insightBanner" id="insightBanner" style="display: none;">
-    <div class="insightIcon" id="insightIcon"></div>
     <div class="insightContent">
       <div class="insightTitle" id="insightTitle"></div>
       <div class="insightDesc" id="insightDesc"></div>
@@ -130,7 +123,7 @@ const API = "https://script.google.com/macros/s/AKfycby5tKKny4hqGyG--JQxP4IVe2C8
 
 let games = [];
 
-// ⚡ Load instantly from local storage cache if it exists
+// Load instantly from local storage cache if it exists
 const cachedData = localStorage.getItem("roblox_games_cache");
 if (cachedData) {
   try {
@@ -153,7 +146,7 @@ async function loadGames(){
   }
 }
 
-/* 🔥 LOCAL TIME-ZONE CORRECTED STREAK ENGINE */
+/* LOCAL TIME-ZONE CORRECTED STREAK ENGINE */
 function calculateStreaks() {
   const streaks = {};
   
@@ -207,10 +200,9 @@ function calculateStreaks() {
   return streaks;
 }
 
-/* 🧠 WEEK/DAY ANALYSIS BANNER LOGIC */
+/* WEEK/DAY ANALYSIS BANNER LOGIC */
 function processInsights() {
   const banner = document.getElementById("insightBanner");
-  const bIcon = document.getElementById("insightIcon");
   const bTitle = document.getElementById("insightTitle");
   const bDesc = document.getElementById("insightDesc");
 
@@ -259,7 +251,6 @@ function processInsights() {
       // Played game at least twice today in separate sessions, averaging under 20 mins per play
       if (stats.count >= 2 && (stats.totalMinutes / stats.count) <= 20 && match) {
         banner.className = "insightBanner warning";
-        bIcon.innerText = "🔄";
         bTitle.innerText = "Getting bored?";
         bDesc.innerHTML = `Repeated boredom loops in <strong>${match.name}</strong>. Take a quick break!`;
         banner.style.display = "flex";
@@ -284,7 +275,6 @@ function processInsights() {
 
     if ((streak >= 3 || totalMins >= 480) && match) {
       banner.className = "insightBanner hype";
-      bIcon.innerText = "🔥";
       bTitle.innerText = "In a phase?";
       bDesc.innerHTML = `Hooked on <strong>${match.name}</strong>: ${Math.floor(totalMins / 60)}h logged over a <strong>${streak} day</strong> streak!`;
       banner.style.display = "flex";
