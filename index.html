@@ -24,7 +24,7 @@ body{
 
   overflow:hidden;
 
-  background:#000000;
+  background: transparent; /* Made background transparent */
   color:white;
 
   font-family:Arial, sans-serif;
@@ -45,8 +45,10 @@ body{
 /* SYSTEM NOTIFICATION BANNER */
 
 .insightBanner {
-  background: #111;
-  border: 1px solid #222;
+  background: rgba(17, 17, 17, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 6px;
   padding: 4px 10px; 
   display: flex;
@@ -67,19 +69,19 @@ body{
 
 /* Banner States */
 .insightBanner.warning {
-  border-color: #000000;
-  background: rgba(245, 158, 11, 0.05);
+  border-color: rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.12);
 }
 
 .insightBanner.hype {
-  border-color: #000000;
-  background: rgba(139, 92, 246, 0.05);
+  border-color: rgba(139, 92, 246, 0.4);
+  background: rgba(139, 92, 246, 0.12);
 }
 
 /* Neutral state when no patterns are found */
 .insightBanner.normal {
-  border-color: #000000;
-  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .insightContent {
@@ -100,7 +102,7 @@ body{
 
 .insightBanner.warning .insightTitle { color: #f59e0b; }
 .insightBanner.hype .insightTitle { color: #a78bfa; }
-.insightBanner.normal .insightTitle { color: #888; } /* Muted title for neutral pattern state */
+.insightBanner.normal .insightTitle { color: #aaa; } /* Muted title for neutral pattern state */
 
 .insightDesc {
   font-size: 11px;
@@ -267,7 +269,6 @@ function processInsights() {
 
   // Check 1: Game Hopping (ADHD Warning) - Tracked by the DAY
   if (todaySessions.length >= 3) {
-    // Sort chronological (oldest to newest today)
     const sortedToday = [...todaySessions].sort((a, b) => new Date(a.date) - new Date(b.date));
     const bounceCounter = {};
     let lastGameId = null;
@@ -290,19 +291,18 @@ function processInsights() {
     for (const id in bounceCounter) {
       const stats = bounceCounter[id];
       const match = games.find(g => g.id === id);
-      // Played game at least twice today in separate sessions, averaging under 20 mins per play
       if (stats.count >= 2 && (stats.totalMinutes / stats.count) <= 20 && match) {
         banner.className = "insightBanner warning";
         bTitle.innerText = "Getting bored";
         bDesc.innerHTML = `in <strong>${match.name}</strong>. Take a quick break!`;
         banner.style.display = "flex";
         adjustFontSize();
-        return; // Prioritize warnings first
+        return;
       }
     }
   }
 
-  // Check 2: Hyperfocus Phase - Tracked by the WEEK (Active Streak >= 3 days OR Week Playtime > 8 hours)
+  // Check 2: Hyperfocus Phase - Tracked by the WEEK
   const weeklyAggregated = {};
   weekSessions.forEach(g => {
     if (!weeklyAggregated[g.id]) {
